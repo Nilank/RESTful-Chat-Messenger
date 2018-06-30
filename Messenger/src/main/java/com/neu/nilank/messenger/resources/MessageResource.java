@@ -30,7 +30,6 @@ public class MessageResource {
     MessageService messageService = new MessageService();
     
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public List<Message> getMessages(){
         return messageService.getAllMessages();
     }
