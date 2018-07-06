@@ -6,8 +6,10 @@
 package com.neu.nilank.messenger.resources;
 
 import com.neu.nilank.messenger.model.Message;
+import com.neu.nilank.messenger.resources.beans.MessageFilterBean;
 import com.neu.nilank.messenger.service.MessageService;
 import java.util.List;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -31,14 +33,12 @@ public class MessageResource {
     MessageService messageService = new MessageService();
     
     @GET
-    public List<Message> getMessages(@QueryParam("year") int year,
-                                     @QueryParam("start") int start,
-                                     @QueryParam("size") int size){
-        if(year > 0){
-            return messageService.getAllMessagesForYear(year);
+    public List<Message> getMessages(@BeanParam MessageFilterBean filterBean){
+        if(filterBean.getYear() > 0){
+            return messageService.getAllMessagesForYear(filterBean.getYear());
         }
-        if(start>=0 && size>=0){
-            return messageService.getAllMessagesPaginated(start, size);
+        if(filterBean.getStar()>=0 && filterBean.getSize()>=0){
+            return messageService.getAllMessagesPaginated(filterBean.getStar(), filterBean.getSize());
         }
         
         return messageService.getAllMessages();
