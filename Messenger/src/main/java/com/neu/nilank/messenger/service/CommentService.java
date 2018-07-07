@@ -7,10 +7,14 @@ package com.neu.nilank.messenger.service;
 
 import com.neu.nilank.messenger.database.DatabaseClass;
 import com.neu.nilank.messenger.model.Comment;
+import com.neu.nilank.messenger.model.ErrorMessage;
 import com.neu.nilank.messenger.model.Message;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -26,7 +30,17 @@ public class CommentService {
     }
     
     public Comment getComment(long messageId, long commentId){
+        ErrorMessage errorMessage = new ErrorMessage("Not Found", 404, "http://google.com");
+        Response response =  Response.status(Response.Status.NOT_FOUND).entity(errorMessage).build();
+        Message message = messages.get(messageId);
+        if(message == null){
+            throw new WebApplicationException(response);
+        }
         Map<Long, Comment> comments = messages.get(messageId).getComments();
+        Comment comment = comments.get(commentId);
+        if(comment == null){
+            throw new NotFoundException(response);
+        }
         return comments.get(commentId);   
     }
     

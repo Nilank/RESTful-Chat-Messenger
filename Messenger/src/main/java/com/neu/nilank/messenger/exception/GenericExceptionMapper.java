@@ -14,7 +14,7 @@ import javax.ws.rs.ext.Provider;
  *
  * @author nilan
  */
-@Provider
+
 public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Override
