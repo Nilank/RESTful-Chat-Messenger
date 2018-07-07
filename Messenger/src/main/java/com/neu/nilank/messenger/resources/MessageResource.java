@@ -24,6 +24,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilderException;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -73,9 +74,21 @@ public class MessageResource {
     
     @GET
     @Path("/{messageId}")
-    public Message getMessage(@PathParam("messageId") long id){
-        return messageService.getMessage(id);
+    public Message getMessage(@PathParam("messageId") long id, @Context UriInfo uriInfo){
+        Message message = messageService.getMessage(id);
+        String uri = getUriForSelf(uriInfo, message);
+        message.addLink(getUriForSelf(uriInfo, message), "self");
+        return message;
         
+    }
+
+    private String getUriForSelf(UriInfo uriInfo, Message message) throws IllegalArgumentException, UriBuilderException {
+        String uri = uriInfo.getBaseUriBuilder()
+                .path(MessageResource.class)
+                .path(Long.toString(message.getId()))
+                .build()
+                .toString();
+        return uri;
     }
     
     @Path("/{messageId}/comments")
