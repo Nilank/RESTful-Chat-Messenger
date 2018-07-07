@@ -6,6 +6,7 @@
 package com.neu.nilank.messenger.service;
 
 import com.neu.nilank.messenger.database.DatabaseClass;
+import com.neu.nilank.messenger.exception.DataNotFoundException;
 import com.neu.nilank.messenger.model.Message;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,7 +52,11 @@ public class MessageService {
     }
     
     public Message getMessage(long id){
-        return messages.get(id);
+        Message message = messages.get(id);
+        if(message == null){
+            throw new DataNotFoundException("Message with id " + id + " not found");
+        }
+        return message;
     }
     
     public Message addMessage(Message message){
